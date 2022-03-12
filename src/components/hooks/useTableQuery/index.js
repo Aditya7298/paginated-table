@@ -1,0 +1,1 @@
+export { useTableQuery } from "./useTableQuery";
