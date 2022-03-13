@@ -5,6 +5,7 @@ import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 
 const TableBodyComp = ({ columns, rows }) => {
   return (
@@ -13,7 +14,11 @@ const TableBodyComp = ({ columns, rows }) => {
         <TableHead>
           <TableRow>
             {columns.map((column) => (
-              <TableCell key={column}>{column.toUpperCase()}</TableCell>
+              <TableCell key={column}>
+                <Typography variant="subtitle1">
+                  {column.toUpperCase()}
+                </Typography>
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -21,7 +26,9 @@ const TableBodyComp = ({ columns, rows }) => {
           {rows.map((row, ind) => (
             <TableRow key={ind}>
               {columns.map((column, ind) => (
-                <TableCell key={ind}>{row[column]}</TableCell>
+                <TableCell key={ind}>
+                  <Typography>{row[column]}</Typography>
+                </TableCell>
               ))}
             </TableRow>
           ))}

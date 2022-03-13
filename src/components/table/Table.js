@@ -1,6 +1,6 @@
-import "./Table.css";
 import { TableHeader } from "../tableHeader";
 import { TableBody } from "../tableBody";
+import { TableFooter } from "../tableFooter/TableFooter";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { useTable } from "../hooks/useTable";
@@ -16,11 +16,11 @@ export const Table = () => {
     mainEl = (
       <Box
         sx={{
-          height: "100%",
           width: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          height: "800px",
         }}
       >
         <CircularProgress />
@@ -31,7 +31,16 @@ export const Table = () => {
   } else if (!data.results) {
     mainEl = null;
   } else {
-    mainEl = <TableBody columns={COLUMNS} rows={data.results} />;
+    mainEl = (
+      <>
+        <TableBody columns={COLUMNS} rows={data.results} />
+        <TableFooter
+          pageNumber={state.pageNumber}
+          totalRowCount={data?.info.count}
+          onAction={onAction}
+        />
+      </>
+    );
   }
 
   return (

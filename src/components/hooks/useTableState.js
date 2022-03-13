@@ -11,7 +11,7 @@ const INITIAL_STATE = {
 const reducer = (state, action) => {
   switch (action.type) {
     case TABLE_ACTIONS.EDIT_SEARCH_QUERY:
-      return { ...state, searchQuery: action.payload };
+      return { ...state, pageNumber: 0, searchQuery: action.payload };
 
     case TABLE_ACTIONS.APPLY_FILTER:
       return {
