@@ -4,7 +4,7 @@ import { TABLE_ACTIONS } from "../constants";
 
 const INITIAL_STATE = {
   searchQuery: "",
-  filtersApplied: [],
+  filtersApplied: {},
   pageNumber: 0,
 };
 
@@ -16,15 +16,7 @@ const reducer = (state, action) => {
     case TABLE_ACTIONS.APPLY_FILTER:
       return {
         ...state,
-        filtersApplied: [...state.filtersApplied, action.payload],
-      };
-
-    case TABLE_ACTIONS.REMOVE_FILTER:
-      return {
-        ...state,
-        filtersApplied: state.filtersApplied.filter(
-          (filter) => filter !== action.payload
-        ),
+        filtersApplied: { ...state.filtersApplied, ...action.payload },
       };
 
     case TABLE_ACTIONS.CHANGE_PAGE_NUMBER:
@@ -40,6 +32,8 @@ const reducer = (state, action) => {
 
 export const useTableState = () => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+
+  console.log(state);
 
   return [state, dispatch];
 };

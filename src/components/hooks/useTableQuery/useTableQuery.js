@@ -34,12 +34,9 @@ export const useTableQuery = ({ filtersApplied, searchQuery, pageNumber }) => {
       }));
 
       try {
-        const res = await fetch(
-          serializeUrlParams(
-            "https://rickandmortyapi.com/api/character",
-            urlParams
-          )
-        ).then((res) => res.json());
+        const res = await fetch(serializeUrlParams(BASE_URL, urlParams)).then(
+          (res) => res.json()
+        );
 
         setState((prevState) => ({
           ...prevState,

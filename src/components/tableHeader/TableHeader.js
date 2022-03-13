@@ -34,7 +34,22 @@ export const TableHeader = ({ state, onAction }) => {
           flexGrow: 2,
         }}
       >
-        <FilterBar />
+        <FilterBar
+          selectedFilters={state.filtersApplied}
+          allowedFilters={[
+            {
+              field: "gender",
+              allowedValues: ["male", "female", "unknown", "genderless"],
+              displayName: "Gender",
+            },
+            {
+              field: "status",
+              displayName: "Status",
+              allowedValues: ["alive", "dead", "unknown"],
+            },
+          ]}
+          onAction={onAction}
+        />
       </Box>
     </Box>
   );
