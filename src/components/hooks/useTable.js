@@ -10,5 +10,5 @@ export const useTable = () => {
     pageNumber: state.pageNumber,
   });
 
-  return [state, onAction];
+  return { state, onAction, data, loading, error };
 };

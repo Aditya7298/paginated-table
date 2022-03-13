@@ -1,12 +1,41 @@
-import "./TableHeader.css";
-import { SearchBox } from "./searchBox/SearchBox";
+import { SearchBox } from "./SearchBox";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { FilterBar } from "./FilterBar";
 
 export const TableHeader = ({ state, onAction }) => {
   return (
-    <div className="TableHeader">
-      <div className="table-header_search-box">
+    <Box sx={{ width: "100%", padding: "10px", display: "flex" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "start",
+          alignItems: "center",
+          flexGrow: 1,
+        }}
+      >
+        <Typography variant="h5">Paginated Table</Typography>
+      </Box>
+      <Box
+        sx={{
+          width: "40%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <SearchBox value={state.searchQuery} onAction={onAction} />
-      </div>
-    </div>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexGrow: 2,
+        }}
+      >
+        <FilterBar />
+      </Box>
+    </Box>
   );
 };
