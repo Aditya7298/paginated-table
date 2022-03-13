@@ -19,6 +19,12 @@ const reducer = (state, action) => {
         filtersApplied: { ...state.filtersApplied, ...action.payload },
       };
 
+    case TABLE_ACTIONS.RESET_FILTERS:
+      return {
+        ...state,
+        filtersApplied: {},
+      };
+
     case TABLE_ACTIONS.CHANGE_PAGE_NUMBER:
       return {
         ...state,
@@ -32,8 +38,6 @@ const reducer = (state, action) => {
 
 export const useTableState = () => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-
-  console.log(state);
 
   return [state, dispatch];
 };

@@ -1,20 +1,37 @@
+import { useMemo } from "react";
 import Box from "@mui/material/Box";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
+import Button from "@mui/material/Button";
 import { TABLE_ACTIONS } from "../constants";
 
 const adaptFilters = (selectedFilters, allowedFilters) => {
   return allowedFilters.map(({ field, ...rest }) => ({
     ...rest,
     field,
-    selectedValue: selectedFilters[field],
+    selectedValue: selectedFilters[field] ?? "",
   }));
 };
 
 export const FilterBar = ({ selectedFilters, allowedFilters, onAction }) => {
-  const adaptedFilters = adaptFilters(selectedFilters, allowedFilters);
+  const adaptedFilters = useMemo(
+    () => adaptFilters(selectedFilters, allowedFilters),
+    [allowedFilters, selectedFilters]
+  );
+
+  const areFiltersApplied = useMemo(
+    () =>
+      adaptedFilters.reduce((acc, filter) => {
+        if (!filter.selectedValue) {
+          return acc || false;
+        }
+
+        return true;
+      }, false),
+    [adaptedFilters]
+  );
 
   const handleChange = (name, value) => {
     onAction({
@@ -22,6 +39,12 @@ export const FilterBar = ({ selectedFilters, allowedFilters, onAction }) => {
       payload: {
         [name]: value,
       },
+    });
+  };
+
+  const resetFilters = () => {
+    onAction({
+      type: TABLE_ACTIONS.RESET_FILTERS,
     });
   };
 
@@ -59,6 +82,18 @@ export const FilterBar = ({ selectedFilters, allowedFilters, onAction }) => {
           );
         }
       )}
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        {areFiltersApplied ? (
+          <Button
+            sx={{ height: "50px" }}
+            variant="contained"
+            size="medium"
+            onClick={resetFilters}
+          >
+            Remove Filters
+          </Button>
+        ) : null}
+      </Box>
     </Box>
   );
 };
