@@ -1,22 +1,12 @@
-import { useEffect, useState } from "react";
-import { serializeUrlParams } from "./utils";
+import { useEffect, useMemo, useState } from "react";
+import { serializeUrlParams, createCacheKey } from "./utils";
 
 const QUERY_STATUS = {
   IDLE: "IDLE",
   LOADING: "LOADING",
 };
 
-const fetchDataFromBackend = ({ pageNumber, filters, searchQuery }) => {
-  return fetch(
-    serializeUrlParams("https://rickandmortyapi.com/api/character", {
-      name: searchQuery,
-      ...filters,
-      page: pageNumber,
-    })
-  )
-    .then((res) => res.json())
-    .catch((err) => err);
-};
+const BASE_URL = "https://rickandmortyapi.com/api/character";
 
 export const useTableQuery = ({ filtersApplied, searchQuery, pageNumber }) => {
   const [state, setState] = useState({
@@ -24,6 +14,17 @@ export const useTableQuery = ({ filtersApplied, searchQuery, pageNumber }) => {
     error: undefined,
     status: QUERY_STATUS.IDLE,
   });
+
+  const urlParams = useMemo(
+    () => ({
+      ...filtersApplied,
+      name: searchQuery,
+      page: pageNumber,
+    }),
+    [filtersApplied, pageNumber, searchQuery]
+  );
+
+  const cacheKey = createCacheKey(BASE_URL, urlParams);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,18 +34,19 @@ export const useTableQuery = ({ filtersApplied, searchQuery, pageNumber }) => {
       }));
 
       try {
-        const res = await fetchDataFromBackend({
-          pageNumber,
-          filters: filtersApplied,
-          searchQuery,
-        });
+        const res = await fetch(
+          serializeUrlParams(
+            "https://rickandmortyapi.com/api/character",
+            urlParams
+          )
+        ).then((res) => res.json());
 
         setState((prevState) => ({
           ...prevState,
           status: QUERY_STATUS.IDLE,
           data: {
             ...prevState.data,
-            [pageNumber]: res,
+            [cacheKey]: res,
           },
         }));
       } catch (err) {
@@ -56,14 +58,21 @@ export const useTableQuery = ({ filtersApplied, searchQuery, pageNumber }) => {
       }
     };
 
-    if (!state.data[pageNumber]) {
+    if (!state.data[cacheKey]) {
       fetchData();
     }
-  }, [filtersApplied, pageNumber, searchQuery, state.data]);
+  }, [
+    filtersApplied,
+    pageNumber,
+    searchQuery,
+    state.data,
+    urlParams,
+    cacheKey,
+  ]);
 
   return {
-    data: state.data[pageNumber],
+    data: state.data[cacheKey],
     error: state.error,
-    loading: !state.data[pageNumber] && !state.error,
+    loading: !state.data[cacheKey] && !state.error,
   };
 };
